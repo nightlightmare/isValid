@@ -1,6 +1,6 @@
 {
   "name": "@nightlightmare/isvalid",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "license": "Apache-2.0",
   "description": "Pack of validation functions for JavaScript/TypeScript",
   "keywords": [

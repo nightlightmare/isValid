@@ -1,7 +1,21 @@
 {
   "name": "@nightlightmare/isvalid",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "license": "Apache-2.0",
+  "description": "Pack of validation functions for JavaScript/TypeScript",
+  "keywords": [
+    "validation",
+    "email"
+  ],
+  "homepage": "https://github.com/nightlightmare/isValid",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nightlightmare/isValid.git"
+  },
+  "author": "Petr Grishin <petro11@yandex.ru>",
+  "bugs": {
+    "url": "https://github.com/nightlightmare/isValid/issues"
+  },
   "type": "module",
   "files": [
     "dist",

@@ -20,7 +20,7 @@ function isEmail(email: string): boolean;
 ## Usage
 
 ```typescript
-import { isEmail } from "./isEmail";
+import { isEmail } from "@nightlightmare/isvalid";
 
 console.log(isEmail("test@example.com")); // true
 console.log(isEmail("invalid-email.com")); // false

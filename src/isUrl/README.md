@@ -1,56 +1,55 @@
-# isUrl Function
+# isUrl Function - URL Validation with Whitelist and Blacklist
 
-This repository provides a simple and lightweight utility function, `isUrl`, to validate whether a given string is a valid URL. The function uses a regular expression to check the URL format and supports protocols like `http`, `https`, and `ftp`.
+This JavaScript function validates a URL and checks if it matches additional validation rules specified via `whitelist` and `blacklist` options.
 
-## Installation
+## Function: `isUrl(url: string, options?: { whitelist?: UrlValidationRules, blacklist?: UrlValidationRules }): boolean`
 
-You can import the `isUrl` function into your project. For instance:
+### Parameters
 
-### TypeScript/JavaScript
+- `url` (string): The string to validate as a URL.
+- `options` (optional object): Contains additional validation rules for the URL:
+  - `whitelist` (optional): Specifies the allowed parts of the URL (protocol, domain, port, path, query, fragment).
+  - `blacklist` (optional): Specifies the restricted parts of the URL (protocol, domain, port, path, query, fragment).
+
+### `UrlValidationRules` Structure
+
+The `UrlValidationRules` type contains the following optional properties:
+
+- `protocol`: List of allowed protocols (e.g., `['http', 'https']`).
+- `domain`: List of allowed domains (e.g., `['example.com']`).
+- `port`: List of allowed ports (e.g., `['8080']`).
+- `path`: List of allowed URL paths (e.g., `['/home', '/about']`).
+- `query`: List of allowed query parameters (e.g., `['id=123']`).
+- `fragment`: List of allowed fragments (e.g., `['#section']`).
+
+### Return Value
+
+- Returns `true` if the `url` is a valid URL and matches the rules provided in `whitelist` and doesn't match any rules in `blacklist`.
+- Returns `false` if the `url` is invalid or doesn't meet the conditions specified in the `whitelist` or `blacklist`.
+
+### Example Usage
+
 ```javascript
 import { isUrl } from "@nightlightmare/isvalid";
+
+const options = {
+  whitelist: {
+    protocol: ["https"],
+    domain: ["example.com"],
+    path: ["/home"],
+  },
+  blacklist: {
+    query: ["id=456"],
+  },
+};
+
+const isValid = isUrl("https://example.com/home?id=123", options);
+console.log(isValid); // Output: true
 ```
 
-## Usage
+### Notes
 
-### Function Signature
-```typescript
-/**
- * Validates if the given string is a valid URL.
- * @param url - The string to validate.
- * @returns True if the string is a valid URL, otherwise false.
- */
-function isUrl(url: string): boolean;
-```
-
-### Example
-
-```javascript
-import { isUrl } from './isUrl';
-
-console.log(isUrl("http://example.com")); // true
-console.log(isUrl("https://example.com")); // true
-console.log(isUrl("ftp://example.com")); // true
-console.log(isUrl("example")); // false
-console.log(isUrl("http:/example.com")); // false
-```
-
-## How it Works
-
-The `isUrl` function uses the following regular expression to validate URLs:
-```regex
-/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
-```
-### Explanation:
-1. **Protocol Validation**: Checks for `http`, `https`, or `ftp` at the start of the string.
-2. **Format Check**: Ensures that the URL contains a valid structure after the protocol, including domain and optional paths or query strings.
-3. **Invalid Characters**: Ensures that spaces and certain special characters are not included.
-
-## Limitations
-
-- This function only validates the format of the URL and does not check for the existence or reachability of the URL.
-- Non-URL strings, like `example.com` (missing protocol), will be considered invalid.
-
-## References
-
-- [GitHub Source Code](https://github.com/nightlightmare/isValid/blob/main/src/isUrl)
+- The function first validates the URL using a regular expression to check if it follows the general format of a URL.
+- Then it parses the URL into its components (protocol, domain, port, path, query, fragment).
+- The function checks if the URL matches any rules in the `whitelist` and does not match any rules in the `blacklist`.
+- If the URL fails any of the conditions, the function will return `false`.

@@ -16,7 +16,7 @@ export type UrlValidationRules = {
  * @param options - Additional validation options.
  * @param options.whitelist - Object specifying allowed parts of the URL.
  * @param options.blacklist - Object specifying restricted parts of the URL.
- * @returns True if the string is a valid URL and passes the whitelist/blacklist checks, otherwise false.
+ * @returns True if the string is a valid URL and passes the whitelist/blacklist checks, otherwise false. * 
  * @see https://github.com/nightlightmare/isValid/blob/main/src/isUrl
  */
 export function isUrl(
@@ -32,7 +32,7 @@ export function isUrl(
     return false;
   }
 
-  // Step 2: Parse the URL to its components
+  // Step 2: Parse the URL
   let parsedUrl;
   try {
     parsedUrl = new URL(url);
@@ -42,36 +42,40 @@ export function isUrl(
 
   const { protocol, hostname, port, pathname, search, hash } = parsedUrl;
 
-  // Helper function to match against whitelist/blacklist rules
-  const matchesRules = (rules: UrlValidationRules | undefined, key: string, value: string | null): boolean => {
-    if (!rules || !rules[key as keyof UrlValidationRules]) return true;
-    const ruleList = rules[key as keyof UrlValidationRules] as string[];
+  // Step 3: Helper function for matching against rules
+  const matchesRules = (
+    rules: UrlValidationRules | undefined,
+    key: keyof UrlValidationRules,
+    value: string | null
+  ): boolean => {
+    if (!rules || !rules[key]) return true; // No rules to validate
+    const ruleList = rules[key]!;
     return ruleList.includes(value || "");
   };
 
-  // Step 3: Validate against whitelist
+  // Step 4: Check whitelist
   if (options?.whitelist) {
     if (
-      !matchesRules(options.whitelist, "protocol", protocol.replace(":", "")) ||
-      !matchesRules(options.whitelist, "domain", hostname) ||
-      !matchesRules(options.whitelist, "port", port) ||
-      !matchesRules(options.whitelist, "path", pathname) ||
-      !matchesRules(options.whitelist, "query", search.replace("?", "")) ||
-      !matchesRules(options.whitelist, "fragment", hash.replace("#", ""))
+      (options.whitelist.protocol && !matchesRules(options.whitelist, "protocol", protocol.replace(":", ""))) ||
+      (options.whitelist.domain && !matchesRules(options.whitelist, "domain", hostname)) ||
+      (options.whitelist.port && !matchesRules(options.whitelist, "port", port)) ||
+      (options.whitelist.path && !matchesRules(options.whitelist, "path", pathname)) ||
+      (options.whitelist.query && !matchesRules(options.whitelist, "query", search.replace("?", ""))) ||
+      (options.whitelist.fragment && !matchesRules(options.whitelist, "fragment", hash.replace("#", "")))
     ) {
       return false;
     }
   }
 
-  // Step 4: Validate against blacklist
+  // Step 5: Check blacklist
   if (options?.blacklist) {
     if (
-      matchesRules(options.blacklist, "protocol", protocol.replace(":", "")) ||
-      matchesRules(options.blacklist, "domain", hostname) ||
-      matchesRules(options.blacklist, "port", port) ||
-      matchesRules(options.blacklist, "path", pathname) ||
-      matchesRules(options.blacklist, "query", search.replace("?", "")) ||
-      matchesRules(options.blacklist, "fragment", hash.replace("#", ""))
+      (options.blacklist.protocol && matchesRules(options.blacklist, "protocol", protocol.replace(":", ""))) ||
+      (options.blacklist.domain && matchesRules(options.blacklist, "domain", hostname)) ||
+      (options.blacklist.port && matchesRules(options.blacklist, "port", port)) ||
+      (options.blacklist.path && matchesRules(options.blacklist, "path", pathname)) ||
+      (options.blacklist.query && matchesRules(options.blacklist, "query", search.replace("?", ""))) ||
+      (options.blacklist.fragment && matchesRules(options.blacklist, "fragment", hash.replace("#", "")))
     ) {
       return false;
     }
@@ -79,4 +83,3 @@ export function isUrl(
 
   return true;
 }
-

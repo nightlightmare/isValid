@@ -7,7 +7,9 @@ The `isValid` package provides two utility functions for validating common types
 
 ## Functions
 
-### `isEmail(email: string, options?: { blacklist?: string[], whitelist?: string[], maxLength?: number }): boolean`
+### isEmail
+
+`isEmail(email: string, options?: { blacklist?: string[], whitelist?: string[], maxLength?: number }): boolean`
 
 Validates whether the given string is a valid email with additional options.
 
@@ -39,26 +41,42 @@ console.log(result); // Output: false
 
 ---
 
-### `isUrl(url: string): boolean`
+### isUrl
 
-Validates whether the given string is a valid URL.
+`isUrl(url: string, options?: { whitelist?: UrlValidationRules, blacklist?: UrlValidationRules }): boolean`
+
+Validates whether the given string is a valid URL with additional options.
 
 #### Parameters:
 
-- `url`: The string to validate (type: `string`).
+- `url` (string): The string to validate as a URL.
+- `options` (optional object): Contains additional validation rules for the URL:
+  - `whitelist` (optional): Specifies the allowed parts of the URL (protocol, domain, port, path, query, fragment).
+  - `blacklist` (optional): Specifies the restricted parts of the URL (protocol, domain, port, path, query, fragment).
 
 #### Returns:
 
-- `true` if the string is a valid URL.
-- `false` otherwise.
+- Returns `true` if the `url` is a valid URL and matches the rules provided in `whitelist` and doesn't match any rules in `blacklist`.
+- Returns `false` if the `url` is invalid or doesn't meet the conditions specified in the `whitelist` or `blacklist`.
 
 #### Example:
 
 ```ts
 import { isUrl } from "@nightlightmare/isvalid";
 
-const result = isUrl("https://www.example.com");
-console.log(result); // Output: true
+const options = {
+  whitelist: {
+    protocol: ["https"],
+    domain: ["example.com"],
+    path: ["/home"],
+  },
+  blacklist: {
+    query: ["id=456"],
+  },
+};
+
+const isValid = isUrl("https://example.com/home?id=123", options);
+console.log(isValid); // Output: true
 ```
 
 ---
